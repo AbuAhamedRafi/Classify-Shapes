@@ -11,28 +11,26 @@ Canvas.propTypes = {
   brushSize: PropTypes.number.isRequired, // Mark this prop as required and a number
 };
 
-// Classifier Component
 function Classifier({
-  classify = true, // Default value for classify
-  filename, // Filename for user input
-  setFilename, // Function to update filename
-  title, // Title for the classifier
-  accuracy, // Accuracy value
-  description, // Description of the classifier
-  result = null, // Result (if available)
-  isLoading, // Boolean to indicate loading state
-  canvasRef, // Ref for the canvas
-  submitFunction, // Function to submit the classification
-  dev = false, // Development mode toggle
+  classify = true,
+  filename,
+  setFilename, 
+  title, 
+  accuracy,
+  description, 
+  result = null,
+  isLoading, 
+  canvasRef, 
+  submitFunction, 
+  dev = false, 
 }) {
-  const [currentAccuracy, setCurrentAccuracy] = useState(0); // Track current displayed accuracy
-  const [brushSize, setBrushSize] = useState(8); // Brush size state
-  const navigate = useNavigate(); // Router navigation hook
+  const [currentAccuracy, setCurrentAccuracy] = useState(0); 
+  const [brushSize, setBrushSize] = useState(8); 
+  const navigate = useNavigate(); 
 
-  // Increment accuracy over time
   useEffect(() => {
     if (accuracy > 0) {
-      const incrementSpeed = 6.66; // Adjust the increment speed as needed
+      const incrementSpeed = 6.66; 
       const interval = setInterval(() => {
         setCurrentAccuracy((prevAccuracy) =>
           prevAccuracy + incrementSpeed >= accuracy
@@ -41,13 +39,12 @@ function Classifier({
         );
       }, 50);
 
-      return () => clearInterval(interval); // Cleanup on unmount or accuracy change
+      return () => clearInterval(interval); 
     }
   }, [accuracy]);
 
   return (
     <div className={`flex gap-4 relative ${dev ? "bg-stripes" : ""}`}>
-      {/* Development mode banner */}
       {dev && (
         <div className="absolute bg-gray-200 z-10 top-14 shadow-lg w-full text-center py-4">
           <p className="text-3xl font-bold text-gray-700">Under Development</p>
@@ -60,12 +57,10 @@ function Classifier({
         </div>
       )}
 
-      {/* Canvas for drawing */}
       <div className="self-center">
         <Canvas canvasRef={canvasRef} brushSize={brushSize} />
       </div>
 
-      {/* Classifier details */}
       <div className="w-full">
         <h3 className="text-2xl font-bold tracking-wide">
           {title}{" "}
@@ -77,18 +72,16 @@ function Classifier({
         </h3>
         <p className="text-xs sm:text-sm text-gray-600">{description}</p>
 
-        {/* Brush size slider */}
         <p className="text-xs mt-1 text-gray-600">Brush Size</p>
         <input
           type="range"
           min="2"
           max="16"
           value={brushSize}
-          onChange={(e) => setBrushSize(Number(e.target.value))} // Ensure value is a number
+          onChange={(e) => setBrushSize(Number(e.target.value))}
           className="w-full"
         />
 
-        {/* Result or filename input */}
         {result !== null ? (
           <>
             <p className="text-xs mt-1 text-gray-600">Result:</p>
@@ -109,7 +102,6 @@ function Classifier({
           </>
         )}
 
-        {/* Submit button */}
         <button
           disabled={dev}
           onClick={() => submitFunction(title.toLowerCase())}
@@ -120,7 +112,6 @@ function Classifier({
           {!classify ? "Download" : "Classify"}
         </button>
 
-        {/* Loading animation */}
         <div className={`grid-cols-3 grid mt-1`}>
           <div
             className={`h-1 bg-blue-600 rounded-l-full ${
@@ -143,21 +134,20 @@ function Classifier({
   );
 }
 
-// Define PropTypes for the Classifier component
 Classifier.propTypes = {
-  classify: PropTypes.bool, // Boolean to toggle classify mode
-  filename: PropTypes.string.isRequired, // String for the filename
-  setFilename: PropTypes.func.isRequired, // Function to set the filename
-  title: PropTypes.string.isRequired, // String for the title
-  accuracy: PropTypes.number, // Number for accuracy
-  description: PropTypes.string.isRequired, // String for the description
-  result: PropTypes.string, // String for the result (optional)
-  isLoading: PropTypes.bool.isRequired, // Boolean for loading state
+  classify: PropTypes.bool,
+  filename: PropTypes.string.isRequired, 
+  setFilename: PropTypes.func.isRequired, 
+  title: PropTypes.string.isRequired, 
+  accuracy: PropTypes.number, 
+  description: PropTypes.string.isRequired, 
+  result: PropTypes.string, 
+  isLoading: PropTypes.bool.isRequired, 
   canvasRef: PropTypes.shape({
-    current: PropTypes.instanceOf(Element), // Ref to a DOM element
+    current: PropTypes.instanceOf(Element), 
   }).isRequired,
-  submitFunction: PropTypes.func.isRequired, // Function for submitting the classifier
-  dev: PropTypes.bool, // Boolean for development mode
+  submitFunction: PropTypes.func.isRequired, 
+  dev: PropTypes.bool, 
 };
 
 export default Classifier;
